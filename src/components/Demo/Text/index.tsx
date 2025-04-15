@@ -1,8 +1,9 @@
-import { BaseComponent } from "../../BaseComponents/BaseModal";
 import React from "react";
 import ContentEditable from "react-contenteditable";
 import { useNode, useEditor } from "@craftjs/core";
 import { TextSettings } from "./TextSettings";
+import { BaseComponent } from "../../BaseComponents/BaseModal";
+import FloatingToolbar from "../../Toolbar/FloatingToolbar";
 
 type TextProps = {
   content: string;
@@ -40,51 +41,59 @@ export const Text = ({ className, content, ...props }: TextProps) => {
   const {
     connectors: { connect },
     actions: { setProp },
-  } = useNode();
+    selected,
+  } = useNode((node) => ({
+    selected: node.events.selected,
+  }));
+
   const { enabled } = useEditor((state) => ({
     enabled: state.options.enabled,
   }));
+
   return (
-    <BaseComponent
-      className={className}
-      $buttonStyle={props.buttonStyle}
-      $background={props.background}
-      $color={props.color}
-      $margin={props.margin}
-      $padding={props.padding}
-      $display={props.display}
-      $width={props.width}
-      $minWidth={props.minWidth}
-      $maxWidth={props.maxWidth}
-      $height={props.height}
-      $minHeight={props.minHeight}
-      $maxHeight={props.maxHeight}
-      $position={props.position}
-      $borderRadius={props.borderRadius}
-      $borderWidth={props.borderWidth}
-      $borderStyle={props.borderStyle}
-      $borderColor={props.borderColor}
-      $fontSize={props.fontSize}
-      $fontWeight={props.fontWeight}
-      $lineHeight={props.lineHeight}
-      $spacing={props.spacing}
-      $align={props.align}
-      $verticalAlign={props.verticalAlign}
-      $transform={props.transform}
-      $decoration={props.decoration}
-      $opacity={props.opacity}
-      $cursor={props.cursor}
-    >
-      <ContentEditable
-        innerRef={connect}
-        html={content} // innerHTML of the editable div
-        disabled={!enabled}
-        onChange={(e) => {
-          setProp((prop: any) => (prop.content = e.target.value), 500);
-        }} // use true to disable editing
-        tagName="p" // Use a custom HTML tag (uses a div by default)
-      />
-    </BaseComponent>
+    <div style={{ position: "relative" }}>
+      {selected && enabled && <FloatingToolbar />}
+      <BaseComponent
+        className={className}
+        $buttonStyle={props.buttonStyle}
+        $background={props.background}
+        $color={props.color}
+        $margin={props.margin}
+        $padding={props.padding}
+        $display={props.display}
+        $width={props.width}
+        $minWidth={props.minWidth}
+        $maxWidth={props.maxWidth}
+        $height={props.height}
+        $minHeight={props.minHeight}
+        $maxHeight={props.maxHeight}
+        $position={props.position}
+        $borderRadius={props.borderRadius}
+        $borderWidth={props.borderWidth}
+        $borderStyle={props.borderStyle}
+        $borderColor={props.borderColor}
+        $fontSize={props.fontSize}
+        $fontWeight={props.fontWeight}
+        $lineHeight={props.lineHeight}
+        $spacing={props.spacing}
+        $align={props.align}
+        $verticalAlign={props.verticalAlign}
+        $transform={props.transform}
+        $decoration={props.decoration}
+        $opacity={props.opacity}
+        $cursor={props.cursor}
+      >
+        <ContentEditable
+          innerRef={connect}
+          html={content}
+          disabled={!enabled}
+          onChange={(e) => {
+            setProp((prop: any) => (prop.content = e.target.value), 500);
+          }}
+          tagName="p"
+        />
+      </BaseComponent>
+    </div>
   );
 };
 
