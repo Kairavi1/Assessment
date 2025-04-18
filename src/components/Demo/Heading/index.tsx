@@ -4,6 +4,7 @@ import { useRef, useEffect } from "react";
 import { BaseComponent } from "../../BaseComponents/BaseModal";
 import FloatingToolbar from "../../Toolbar/FloatingToolbar";
 
+// Define the HeadingProps type
 type HeadingProps = {
   text?: string;
   fontSize?: string;
@@ -15,6 +16,7 @@ type HeadingProps = {
   [key: string]: any;
 };
 
+// Heading component using ref properly
 const Heading = ({
   text = "Heading Text",
   fontSize = "24px",
@@ -33,14 +35,19 @@ const Heading = ({
     enabled: state.options.enabled,
   }));
 
+  const ref = useRef(null);
+
+  // Connect ref to the BaseComponent (used for Craft.js connection)
+  useEffect(() => {
+    if (ref.current && connect) {
+      connect(ref.current);
+    }
+  }, [connect]);
+
   return (
     <div style={{ position: "relative" }}>
       {selected && enabled && <FloatingToolbar />}
-      <BaseComponent
-        ref={connect}
-        className={className}
-        {...props}
-      >
+      <BaseComponent ref={ref} className={className} {...props}>
         <ContentEditable
           html={text}
           disabled={!enabled}
@@ -55,6 +62,7 @@ const Heading = ({
   );
 };
 
+// Defining the craft-specific properties for this component
 Heading.craft = {
   displayName: "Heading",
   props: {
