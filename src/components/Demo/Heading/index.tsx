@@ -1,32 +1,69 @@
-import { useNode } from "@craftjs/core";
+import { useNode, useEditor } from "@craftjs/core";
+import ContentEditable from "react-contenteditable";
 import { useRef, useEffect } from "react";
+import { BaseComponent } from "../../BaseComponents/BaseModal";
+import FloatingToolbar from "../../Toolbar/FloatingToolbar";
 
-const Heading = ({ text }: { text: string }) => {
+type HeadingProps = {
+  text?: string;
+  fontSize?: string;
+  className?: string;
+  color?: Record<"r" | "g" | "b" | "a", number>;
+  background?: Record<"r" | "g" | "b" | "a", number>;
+  margin?: any[];
+  padding?: any[];
+  [key: string]: any;
+};
+
+const Heading = ({
+  text = "Heading Text",
+  fontSize = "24px",
+  className = "",
+  ...props
+}: HeadingProps) => {
   const {
-    connectors: { connect, drag },
-  } = useNode();
+    connectors: { connect },
+    actions: { setProp },
+    selected,
+  } = useNode((node) => ({
+    selected: node.events.selected,
+  }));
 
-  const ref = useRef<HTMLHeadingElement>(null);
-
-  useEffect(() => {
-    if (ref.current) {
-      connect(drag(ref.current));
-    }
-  }, [ref]);
+  const { enabled } = useEditor((state) => ({
+    enabled: state.options.enabled,
+  }));
 
   return (
-    <h1 ref={ref} className="text-3xl font-bold">
-      {text}
-    </h1>
+    <div style={{ position: "relative" }}>
+      {selected && enabled && <FloatingToolbar />}
+      <BaseComponent
+        ref={connect}
+        className={className}
+        {...props}
+      >
+        <ContentEditable
+          html={text}
+          disabled={!enabled}
+          onChange={(e) => {
+            setProp((props: any) => (props.text = e.target.value), 500);
+          }}
+          tagName="h1"
+          style={{ fontSize }}
+        />
+      </BaseComponent>
+    </div>
   );
 };
 
 Heading.craft = {
+  displayName: "Heading",
   props: {
     text: "Heading Text",
-  },
-  related: {
-    settings: require("./HeadingSettings").default,
+    fontSize: "24px",
+    background: { r: 255, g: 255, b: 255, a: 0 },
+    color: { r: 0, g: 0, b: 0, a: 1 },
+    margin: ["10", "0", "10", "0"],
+    padding: ["10", "0", "10", "0"],
   },
 };
 

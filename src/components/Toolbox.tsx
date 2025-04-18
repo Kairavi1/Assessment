@@ -2,7 +2,7 @@ import { useEditor } from "@craftjs/core";
 import { useState } from "react";
 import { Button } from "./Demo/Button";
 import { Text } from "./Demo/Text";
-import Heading from "@/components/Demo/Heading";
+import Heading from "@/components/Demo/Heading"; // Import Heading here
 import { ToolboxButton } from "./BaseComponents/ToolboxButton";
 import { ButtonIcon } from "./Icons/ButtonIcon";
 import { TextIcon } from "./Icons/TextIcon";
@@ -29,7 +29,7 @@ export const toolboxItems = [
   },
   {
     name: "Heading",
-    component: <Heading text="Heading Text" />,
+    component: <Heading text="Heading Text" />, // Add Heading here
     icon: <HeadingIcon className="w-10 h-10" />,
   },
 ];

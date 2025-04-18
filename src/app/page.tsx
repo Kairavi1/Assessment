@@ -6,11 +6,12 @@ import { Text } from "@/components/Demo/Text";
 import { Button } from "@/components/Demo/Button";
 import { Container } from "@/components/Demo/Container/ContainerComponent";
 import { ViewPort } from "@/components/ViewPort";
+import  Heading  from "@/components/Demo/Heading"; // Ensure this path is correct
 
 export default function Home() {
   return (
-    <div className="h-screen oklch(0.145 0 0)">
-      <Editor resolver={{ Button, Container, Text }} enabled={true}>
+    <div className="h-screen">
+      <Editor resolver={{ Button, Container, Text, Heading }} enabled={true}>
         <ViewPort>
           <Frame>
             <Element canvas is="div" id="Base Container">
